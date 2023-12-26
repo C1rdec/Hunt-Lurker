@@ -25,6 +25,10 @@ internal class ShellViewModel : Screen, IViewAware
 
     protected override async void OnViewLoaded(object view)
     {
+        var taskbarHeight = 20;
+        var window = view as Window;
+        window.Top = SystemParameters.WorkArea.Height + taskbarHeight;
+
         var processLurker = new HuntProcessService();
 
         // Hunt Showdown is not started (ShutDown)
@@ -43,10 +47,6 @@ internal class ShellViewModel : Screen, IViewAware
 
         _attributeFilePath = Path.Combine(Path.GetDirectoryName(huntGame.ExeFilePath), "user", "profiles", "default", "attributes.xml");
         _playerName = steamService.FindUsername();
-
-        var window = view as Window;
-        var taskbarHeight = 20;
-        window.Top = SystemParameters.WorkArea.Height + taskbarHeight;
 
         _ = WatchMatchMakingRating();
         base.OnViewLoaded(view);
