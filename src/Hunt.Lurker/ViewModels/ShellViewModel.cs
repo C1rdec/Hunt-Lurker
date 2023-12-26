@@ -56,20 +56,26 @@ internal class ShellViewModel : Screen, IViewAware
     {
         while (true)
         {
-            var content = File.ReadAllText(_attributeFilePath);
-
-            var document = XDocument.Parse(content);
-            var attributes = document.Descendants("Attr").ToArray();
-            var element = attributes.Where(e => e.Attribute("value").Value.Contains(_playerName)).FirstOrDefault();
-            var bagplayerTag = element.Attribute("name").Value.Replace("_blood_line_name", "");
-            var mmrAttribute = attributes.FirstOrDefault(a => a.Attribute("name").Value == $"{bagplayerTag}_mmr");
-
-            Execute.OnUIThread(() =>
+            try
             {
-                MatchMakingRating = mmrAttribute.Attribute("value").Value;
-            });
+                var content = File.ReadAllText(_attributeFilePath);
 
-            await Task.Delay(3000);
+                var document = XDocument.Parse(content);
+                var attributes = document.Descendants("Attr").ToArray();
+                var element = attributes.Where(e => e.Attribute("value").Value.Contains(_playerName)).FirstOrDefault();
+                var bagplayerTag = element.Attribute("name").Value.Replace("_blood_line_name", "");
+                var mmrAttribute = attributes.FirstOrDefault(a => a.Attribute("name").Value == $"{bagplayerTag}_mmr");
+
+                Execute.OnUIThread(() =>
+                {
+                    MatchMakingRating = mmrAttribute.Attribute("value").Value;
+                });
+
+                await Task.Delay(3000);
+            }
+            catch(Exception)
+            {
+            }
         }
     }
 }
