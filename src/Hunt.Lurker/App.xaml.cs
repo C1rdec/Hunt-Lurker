@@ -1,11 +1,10 @@
 ﻿using System.Windows;
 
-namespace Hunt.Lurker
+namespace Hunt.Lurker;
+
+/// <summary>
+/// Interaction logic for App.xaml
+/// </summary>
+public partial class App : Application
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
-    {
-    }
 }

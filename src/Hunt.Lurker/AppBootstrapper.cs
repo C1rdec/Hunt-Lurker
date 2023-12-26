@@ -1,121 +1,120 @@
-﻿namespace Hunt.Lurker
+﻿namespace Hunt.Lurker;
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using Caliburn.Micro;
+using Hunt.Lurker.Extensions;
+using Hunt.Lurker.ViewModels;
+
+public class AppBootstrapper : BootstrapperBase
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using Caliburn.Micro;
-    using Hunt.Lurker.Extensions;
-    using Hunt.Lurker.ViewModels;
+    #region Fields
 
-    public class AppBootstrapper : BootstrapperBase
+    private SimpleContainer _container;
+
+    #endregion
+
+    #region Constructors
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AppBootstrapper"/> class.
+    /// </summary>
+    public AppBootstrapper()
     {
-        #region Fields
+        Initialize();
+    }
 
-        private SimpleContainer _container;
+    #endregion
 
-        #endregion
+    #region Methods
 
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AppBootstrapper"/> class.
-        /// </summary>
-        public AppBootstrapper()
+    /// <summary>
+    /// Override this to add custom behavior to execute after the application starts.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The args.</param>
+    protected async override void OnStartup(object sender, System.Windows.StartupEventArgs e)
+    {
+        if (RunningInstance() != null)
         {
-            Initialize();
+            System.Windows.MessageBox.Show("Another instance is running");
+            System.Windows.Application.Current.Shutdown();
+
+            return;
         }
 
-        #endregion
+        await DisplayRootViewForAsync<ShellViewModel>();
+    }
 
-        #region Methods
+    /// <summary>
+    /// Override to configure the framework and setup your IoC container.
+    /// </summary>
+    protected override void Configure()
+    {
+        _container = new SimpleContainer();
 
-        /// <summary>
-        /// Override this to add custom behavior to execute after the application starts.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The args.</param>
-        protected async override void OnStartup(object sender, System.Windows.StartupEventArgs e)
+        // Services
+        _container.Singleton<IWindowManager, WindowManager>();
+        _container.Singleton<IEventAggregator, EventAggregator>();
+
+        // ViewModels
+        _container.PerRequest<ShellViewModel, ShellViewModel>();
+    }
+
+    /// <summary>
+    /// Override this to provide an IoC specific implementation.
+    /// </summary>
+    /// <param name="service">The service to locate.</param>
+    /// <param name="key">The key to locate.</param>
+    /// <returns>
+    /// The located service.
+    /// </returns>
+    protected override object GetInstance(Type service, string key)
+    {
+        return _container.GetInstance(service, key);
+    }
+
+    /// <summary>
+    /// Override this to provide an IoC specific implementation.
+    /// </summary>
+    /// <param name="service">The service to locate.</param>
+    /// <returns>
+    /// The located services.
+    /// </returns>
+    protected override IEnumerable<object> GetAllInstances(Type service)
+    {
+        return _container.GetAllInstances(service);
+    }
+
+    /// <summary>
+    /// Override this to provide an IoC specific implementation.
+    /// </summary>
+    /// <param name="instance">The instance to perform injection on.</param>
+    protected override void BuildUp(object instance)
+    {
+        _container.BuildUp(instance);
+    }
+
+    public static Process RunningInstance()
+    {
+        var currentProcess = Process.GetCurrentProcess();
+        var processes = Process.GetProcessesByName(currentProcess.ProcessName);
+
+        var currentFilePath = currentProcess.GetMainModuleFileName();
+        foreach (var process in processes)
         {
-            if (RunningInstance() != null)
+            if (process.Id != currentProcess.Id)
             {
-                System.Windows.MessageBox.Show("Another instance is running");
-                System.Windows.Application.Current.Shutdown();
-
-                return;
-            }
-
-            await DisplayRootViewForAsync<ShellViewModel>();
-        }
-
-        /// <summary>
-        /// Override to configure the framework and setup your IoC container.
-        /// </summary>
-        protected override void Configure()
-        {
-            _container = new SimpleContainer();
-
-            // Services
-            _container.Singleton<IWindowManager, WindowManager>();
-            _container.Singleton<IEventAggregator, EventAggregator>();
-
-            // ViewModels
-            _container.PerRequest<ShellViewModel, ShellViewModel>();
-        }
-
-        /// <summary>
-        /// Override this to provide an IoC specific implementation.
-        /// </summary>
-        /// <param name="service">The service to locate.</param>
-        /// <param name="key">The key to locate.</param>
-        /// <returns>
-        /// The located service.
-        /// </returns>
-        protected override object GetInstance(Type service, string key)
-        {
-            return _container.GetInstance(service, key);
-        }
-
-        /// <summary>
-        /// Override this to provide an IoC specific implementation.
-        /// </summary>
-        /// <param name="service">The service to locate.</param>
-        /// <returns>
-        /// The located services.
-        /// </returns>
-        protected override IEnumerable<object> GetAllInstances(Type service)
-        {
-            return _container.GetAllInstances(service);
-        }
-
-        /// <summary>
-        /// Override this to provide an IoC specific implementation.
-        /// </summary>
-        /// <param name="instance">The instance to perform injection on.</param>
-        protected override void BuildUp(object instance)
-        {
-            _container.BuildUp(instance);
-        }
-
-        public static Process RunningInstance()
-        {
-            var currentProcess = Process.GetCurrentProcess();
-            var processes = Process.GetProcessesByName(currentProcess.ProcessName);
-
-            var currentFilePath = currentProcess.GetMainModuleFileName();
-            foreach (var process in processes)
-            {
-                if (process.Id != currentProcess.Id)
+                if (process.GetMainModuleFileName() == currentFilePath)
                 {
-                    if (process.GetMainModuleFileName() == currentFilePath)
-                    {
-                        return process;
-                    }
+                    return process;
                 }
             }
-
-            return null;
         }
 
-        #endregion
+        return null;
     }
+
+    #endregion
 }

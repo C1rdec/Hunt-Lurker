@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Xml.Linq;
 using Caliburn.Micro;
-using Hunt.Lurker.Services;
 using Lurker.Steam.Services;
 using ProcessLurker;
 
@@ -41,9 +40,7 @@ internal class ShellViewModel : Screen, IViewAware
 
         _attributeFilePath = Path.Combine(Path.GetDirectoryName(huntGame.ExeFilePath), "user", "profiles", "default", "attributes.xml");
         _playerName = steamService.FindUsername();
-        
 
-        NotifyOfPropertyChange(() => WindowHeight);
         var window = view as Window;
 
         var taskbarHeight = 20;

@@ -5,15 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Hunt.Lurker.Views"
         WindowStartupLocation="Manual"
-        Top="{Binding WindowHeight}"
+        Top="0"
         Left="0"
         mc:Ignorable="d"
         Topmost="True"
         WindowStyle="None"
         Background="Transparent"
         AllowsTransparency="True"
-        Title="ShellView" Height="25" Width="150">
-    <Grid Margin="20,0,0,0">
+        Title="ShellView" Height="25" Width="100">
+    <Grid Margin="10,0,0,0">
         <Viewbox>
             <TextBlock Foreground="Gray" x:Name="MatchMakingRating" FontFamily="Roboto"/>
         </Viewbox>
