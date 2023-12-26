@@ -10,7 +10,6 @@ namespace Hunt.Lurker.ViewModels;
 internal class ShellViewModel : Screen, IViewAware
 {
     private string _matchMakingRating;
-    private double _windowHeight;
     private string _playerName;
     private string _attributeFilePath;
 
@@ -23,8 +22,6 @@ internal class ShellViewModel : Screen, IViewAware
             NotifyOfPropertyChange();
         }
     }
-
-    public double WindowHeight => _windowHeight;
 
     protected override async void OnViewLoaded(object view)
     {
