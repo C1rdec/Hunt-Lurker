@@ -52,7 +52,7 @@ internal class ShellViewModel : Screen, IViewAware
         while (true)
         {
             GetMatchMakingRating();
-            await Task.Delay(2000);
+            await Task.Delay(3000);
         }
     }
 
@@ -66,10 +66,7 @@ internal class ShellViewModel : Screen, IViewAware
             var attributes = document.Descendants("Attr").ToArray();
             var element = attributes.Where(e => e.Attribute("value").Value.Contains(_playerName)).FirstOrDefault();
             var bagplayerTag = element.Attribute("name").Value.Replace("_blood_line_name", "");
-
-            var playerAttributes = attributes.Where(e => e.Attribute("name").Value.StartsWith(bagplayerTag));
-
-            var mmrAttribute = playerAttributes.FirstOrDefault(a => a.Attribute("name").Value == $"{bagplayerTag}_mmr");
+            var mmrAttribute = attributes.FirstOrDefault(a => a.Attribute("name").Value == $"{bagplayerTag}_mmr");
 
             Execute.OnUIThread(() =>
             {
