@@ -1,0 +1,21 @@
+﻿<Window x:Class="Hunt.Lurker.Views.ShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Hunt.Lurker.Views"
+        WindowStartupLocation="Manual"
+        Top="{Binding WindowHeight}"
+        Left="0"
+        mc:Ignorable="d"
+        Topmost="True"
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True"
+        Title="ShellView" Height="25" Width="150">
+    <Grid Margin="20,0,0,0">
+        <Viewbox>
+            <TextBlock Foreground="Gray" x:Name="MatchMakingRating" FontFamily="Roboto"/>
+        </Viewbox>
+    </Grid>
+</Window>
