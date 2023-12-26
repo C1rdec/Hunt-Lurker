@@ -2,8 +2,8 @@
 using System.Windows;
 using System.Xml.Linq;
 using Caliburn.Micro;
+using Hunt.Lurker.Services;
 using Lurker.Steam.Services;
-using ProcessLurker;
 
 namespace Hunt.Lurker.ViewModels;
 
@@ -25,21 +25,26 @@ internal class ShellViewModel : Screen, IViewAware
 
     protected override async void OnViewLoaded(object view)
     {
-        var processLurker = new ProcessService("HuntGame");
+        var processLurker = new HuntProcessService();
 
-        await processLurker.WaitForProcess();
+        // Hunt Showdown is not started (ShutDown)
+        if (await processLurker.WaitForProcess(true, 30000) == -1)
+        {
+            Application.Current.Shutdown();
+
+            return;
+        }
+
         var steamService = new SteamService();
         await steamService.InitializeAsync();
 
         var games = steamService.FindGames();
-
         var huntGame = games.FirstOrDefault(g => g.Id == "594650");
 
         _attributeFilePath = Path.Combine(Path.GetDirectoryName(huntGame.ExeFilePath), "user", "profiles", "default", "attributes.xml");
         _playerName = steamService.FindUsername();
 
         var window = view as Window;
-
         var taskbarHeight = 20;
         window.Top = SystemParameters.WorkArea.Height + taskbarHeight;
 
@@ -50,15 +55,6 @@ internal class ShellViewModel : Screen, IViewAware
     private async Task WatchMatchMakingRating()
     {
         while (true)
-        {
-            GetMatchMakingRating();
-            await Task.Delay(3000);
-        }
-    }
-
-    private void GetMatchMakingRating()
-    {
-        try
         {
             var content = File.ReadAllText(_attributeFilePath);
 
@@ -72,9 +68,8 @@ internal class ShellViewModel : Screen, IViewAware
             {
                 MatchMakingRating = mmrAttribute.Attribute("value").Value;
             });
-        }
-        catch (Exception)
-        {
+
+            await Task.Delay(3000);
         }
     }
 }
