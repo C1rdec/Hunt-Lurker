@@ -10,6 +10,7 @@
         Topmost="True"
         WindowStyle="None"
         Background="Transparent"
+        ShowInTaskbar="False"
         AllowsTransparency="True"
         Title="ShellView" Height="25" Width="100">
     <Grid Margin="10,0,0,0">
