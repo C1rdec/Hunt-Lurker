@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         WindowStartupLocation="Manual"
         Top="0"
-        Left="10"
+        Left="15"
         mc:Ignorable="d"
         Topmost="True"
         WindowStyle="None"
