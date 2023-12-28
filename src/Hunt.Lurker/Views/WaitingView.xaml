@@ -8,6 +8,7 @@
         WindowStyle="None"
         Background="Transparent"
         AllowsTransparency="True"
+        ShowInTaskbar="False"
         WindowStartupLocation="CenterScreen"
         Title="WaitingView" Height="450" Width="800">
     <Border Background="#050607" CornerRadius="8">
