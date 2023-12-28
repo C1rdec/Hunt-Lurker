@@ -1,0 +1,18 @@
+﻿<Window x:Class="Hunt.Lurker.Views.WaitingView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Hunt.Lurker.Views"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen"
+        Title="WaitingView" Height="450" Width="800">
+    <Border Background="#050607" CornerRadius="8">
+        <Viewbox Margin="100,0,100,0">
+            <TextBlock HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" FontFamily="Roboto">Waiting for Hunt Showdown... (30s)</TextBlock>
+        </Viewbox>
+    </Border>
+</Window>

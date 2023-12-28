@@ -60,6 +60,7 @@ public class AppBootstrapper : BootstrapperBase
 
         // ViewModels
         _container.PerRequest<ShellViewModel, ShellViewModel>();
+        _container.PerRequest<WaitingViewModel, WaitingViewModel>();
     }
 
     /// <summary>

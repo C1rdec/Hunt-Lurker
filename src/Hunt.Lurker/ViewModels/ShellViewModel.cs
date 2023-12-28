@@ -12,6 +12,12 @@ internal class ShellViewModel : Screen, IViewAware
     private string _matchMakingRating;
     private string _playerName;
     private string _attributeFilePath;
+    private IWindowManager _windowManager;
+
+    public ShellViewModel(IWindowManager windowManager)
+    {
+        _windowManager = windowManager;
+    }
 
     public string MatchMakingRating
     {
@@ -25,6 +31,11 @@ internal class ShellViewModel : Screen, IViewAware
 
     protected override async void OnViewLoaded(object view)
     {
+        var viewModel = new WaitingViewModel();
+        var debounceService = new DebounceService();
+
+        debounceService.Debounce(1000, () => _windowManager.ShowWindowAsync(viewModel));    
+
         var taskbarHeight = 20;
         var window = view as Window;
         window.Top = SystemParameters.WorkArea.Height + taskbarHeight;
@@ -38,6 +49,10 @@ internal class ShellViewModel : Screen, IViewAware
 
             return;
         }
+
+        debounceService.Reset();
+
+        await viewModel.TryCloseAsync();
 
         var steamService = new SteamService();
         await steamService.InitializeAsync();
