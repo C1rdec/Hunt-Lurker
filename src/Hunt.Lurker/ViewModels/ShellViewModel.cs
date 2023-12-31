@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Xml.Linq;
 using Caliburn.Micro;
@@ -77,8 +78,10 @@ internal class ShellViewModel : Screen, IViewAware
 
                 var document = XDocument.Parse(content);
                 var attributes = document.Descendants("Attr").ToArray();
-                var element = attributes.Where(e => e.Attribute("value").Value.Contains(_playerName)).FirstOrDefault();
-                var bagplayerTag = element.Attribute("name").Value.Replace("_blood_line_name", "");
+                var elements = attributes.Where(e => e.Attribute("value").Value.Contains(_playerName));
+
+                var playerElement = elements.OrderBy(e => int.Parse(e.Attribute("name").Value.Split("_")[1])).FirstOrDefault();
+                var bagplayerTag = playerElement.Attribute("name").Value.Replace("_blood_line_name", "");
                 var mmrAttribute = attributes.FirstOrDefault(a => a.Attribute("name").Value == $"{bagplayerTag}_mmr");
 
                 Execute.OnUIThread(() =>
