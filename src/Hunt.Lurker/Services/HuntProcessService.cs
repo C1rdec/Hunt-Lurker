@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using ProcessLurker;
+﻿using ProcessLurker;
 
 namespace Hunt.Lurker.Services;
 
@@ -9,7 +8,4 @@ internal class HuntProcessService : ProcessService
         : base("HuntGame")
     {
     }
-
-    protected override void OnExit()
-        => Caliburn.Micro.Execute.OnUIThread(Application.Current.Shutdown);
 }

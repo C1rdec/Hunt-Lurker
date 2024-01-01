@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Xml.Linq;
 using Caliburn.Micro;
@@ -13,11 +12,12 @@ internal class ShellViewModel : Screen, IViewAware
     private string _matchMakingRating;
     private string _playerName;
     private string _attributeFilePath;
-    private IWindowManager _windowManager;
+    private HuntProcessService _processService;
 
-    public ShellViewModel(IWindowManager windowManager)
+    public ShellViewModel()
     {
-        _windowManager = windowManager;
+        _processService = new HuntProcessService();
+        _processService.ProcessClosed += ProcessService_ProcessClosed;
     }
 
     public string MatchMakingRating
@@ -32,39 +32,30 @@ internal class ShellViewModel : Screen, IViewAware
 
     protected override async void OnViewLoaded(object view)
     {
-        var viewModel = new WaitingViewModel();
-        var debounceService = new DebounceService();
-
-        debounceService.Debounce(1000, () => _windowManager.ShowWindowAsync(viewModel));    
-
         var taskbarHeight = 20;
         var window = view as Window;
         window.Top = SystemParameters.WorkArea.Height + taskbarHeight;
 
-        var processLurker = new HuntProcessService();
+        var steamService = new SteamService();
+        await steamService.InitializeAsync();
+        var games = steamService.FindGames();
+        var huntGame = games.FirstOrDefault(g => g.Id == "594650");
 
-        // Hunt Showdown is not started (ShutDown)
-        if (await processLurker.WaitForProcess(true, 30000) == -1)
+        // Hunt Showdown is not installed
+        if (huntGame == null)
         {
             Application.Current.Shutdown();
 
             return;
         }
 
-        debounceService.Reset();
-
-        await viewModel.TryCloseAsync();
-
-        var steamService = new SteamService();
-        await steamService.InitializeAsync();
-
-        var games = steamService.FindGames();
-        var huntGame = games.FirstOrDefault(g => g.Id == "594650");
+        await huntGame.Open();      
 
         _attributeFilePath = Path.Combine(Path.GetDirectoryName(huntGame.ExeFilePath), "user", "profiles", "default", "attributes.xml");
         _playerName = steamService.FindUsername();
 
         _ = WatchMatchMakingRating();
+        _ = _processService.WaitForProcess(true, false, 66666);
         base.OnViewLoaded(view);
     }
 
@@ -95,5 +86,10 @@ internal class ShellViewModel : Screen, IViewAware
             {
             }
         }
+    }
+
+    private void ProcessService_ProcessClosed(object sender, EventArgs e)
+    {
+        Execute.OnUIThread(Application.Current.Shutdown);
     }
 }
