@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Caliburn.Micro;
+using global::Lurker.Windows;
 using Hunt.Lurker.Extensions;
 using Hunt.Lurker.ViewModels;
 
@@ -36,6 +37,7 @@ public class AppBootstrapper : BootstrapperBase
     /// <param name="e">The args.</param>
     protected async override void OnStartup(object sender, System.Windows.StartupEventArgs e)
     {
+        var link = new WindowsLink("Hunt Lurker.lnk", "Hunt Lurker");
         if (RunningInstance() != null)
         {
             System.Windows.MessageBox.Show("Another instance is running");
@@ -43,6 +45,8 @@ public class AppBootstrapper : BootstrapperBase
 
             return;
         }
+
+        link.AddStartMenu();
 
         await DisplayRootViewForAsync<ShellViewModel>();
     }

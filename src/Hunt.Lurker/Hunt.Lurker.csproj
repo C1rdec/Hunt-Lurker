@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Caliburn.Micro" Version="4.0.212" />
     <PackageReference Include="Lurker.Steam" Version="8.0.0" />
+    <PackageReference Include="Lurker.Windows" Version="1.0.0" />
     <PackageReference Include="ProcessLurker" Version="1.1.0" />
   </ItemGroup>
 
