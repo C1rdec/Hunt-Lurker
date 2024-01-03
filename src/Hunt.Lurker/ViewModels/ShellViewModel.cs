@@ -44,6 +44,7 @@ internal class ShellViewModel : Screen, IViewAware
         // Hunt Showdown is not installed
         if (huntGame == null)
         {
+            MessageBox.Show("Hunt Showdown is not installed.");
             Application.Current.Shutdown();
 
             return;
@@ -72,13 +73,20 @@ internal class ShellViewModel : Screen, IViewAware
                 var elements = attributes.Where(e => e.Attribute("value").Value.Contains(_playerName));
 
                 var playerElement = elements.OrderBy(e => int.Parse(e.Attribute("name").Value.Split("_")[1])).FirstOrDefault();
-                var bagplayerTag = playerElement.Attribute("name").Value.Replace("_blood_line_name", "");
-                var mmrAttribute = attributes.FirstOrDefault(a => a.Attribute("name").Value == $"{bagplayerTag}_mmr");
-
-                Execute.OnUIThread(() =>
+                if (playerElement != null)
                 {
-                    MatchMakingRating = mmrAttribute.Attribute("value").Value;
-                });
+                    var bagplayerTag = playerElement.Attribute("name").Value.Replace("_blood_line_name", "");
+                    var mmrAttribute = attributes.FirstOrDefault(a => a.Attribute("name").Value == $"{bagplayerTag}_mmr");
+
+                    Execute.OnUIThread(() =>
+                    {
+                        MatchMakingRating = mmrAttribute.Attribute("value").Value;
+                    });
+                }
+                else
+                {
+                    MatchMakingRating = "MMR calibrating";
+                }
 
                 await Task.Delay(3000);
             }
