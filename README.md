@@ -1,4 +1,4 @@
-# Hunt Lurker
+# Hunt Lurker <a href="https://apps.microsoft.com/store/detail/9PKXKMP9QRV1?launch=true&mode=mini" target="_blank"><img align='right' src="https://get.microsoft.com/images/en-US%20dark.svg" height="100"></a>
 
 Hunt Lurker is a simple overlay that display the numeric value of your **M**atch **M**aking **R**ating.         (***MMR***)
 
